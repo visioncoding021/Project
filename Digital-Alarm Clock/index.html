@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Digital-Clock</title>
+</head>
+<body>
+    <div class="clock-board">
+        <div class="time-board">
+            <div class="hours time">10</div> <p>:</p>
+            <div class="minutes time">30</div><p>:</p>
+            <div class="seconds time">24</div>
+            <div class="AM-PM time">AM</div>
+        </div>
+        <div class="date-board">23 March 2024</div>
+        <div class="alarm-board">02:03:18</div>
+        <div class="countDown">00:00:00</div>
+        <div class="controler">
+            <div class="set-alarm btn">Alarm</div>
+            <div class="start-count-down btn">Start</div>
+            <div class="alarm-off btn invisible">Pause</div>
+            <div class="reset btn invisible">Reset</div>
+            <div class="alarm-snooze btn invisible">Snooze</div>
+        </div>
+    </div>
+    <div class="timeSelector clock-board">
+        <div class="Hours-list">
+           <p class="Hour">Hours</p>
+           <input type="text"class="HoursValues valueInsert" >
+
+        </div>
+        <div class="minutes-list">
+            
+                <p class="Minute">Minutes</p>
+              
+                <input type="text"class="MinutesValue valueInsert" >
+     
+        </div>
+        <div>
+                <p class="Second">Seconds</p>
+                <input type="text"class="SecondsValue valueInsert" >
+        </div>
+        <div class="btn set">Set</div>
+
+
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
