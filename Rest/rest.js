@@ -3,6 +3,11 @@ const fs = require("fs");
 const users = require("./MOCK_DATA.json");
 const app = express();
 app.use(express.urlencoded({extended:false}));
+app.use((req,res,next)=>{
+    console.log("hello from second middleware");
+    // res.json({msg : "hello from middleware"});
+    next();
+})
 
 app.get("/users",(req,res)=>{
     const html =`
