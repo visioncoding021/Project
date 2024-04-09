@@ -1,139 +1,90 @@
+import React, { useState, useEffect } from "react";
+import RestaurantCard from "./components/RestaurentCard.js";
+import { Link } from "react-router-dom";
+import Shimmer from "./components/Shimmer.js";
+import useOnlineStatus from "./utils/useOnlineStatus.js";
+import useResData from "./utils/useResData.js";
 
-import React from 'react';
-import RestaurentCard from './components/RestaurentCard.js';
+const Body = () => {
+  const [restaurantsData, setRestaurantsData] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const [filterResData, setFilterResData] = useState([]);
+  const onlineStatus = useOnlineStatus();
+  
 
-const resObj = [
-    {
-      resName: "Meghna Food",
-      cuisine: "North Indian, South Indian",
-      rating: 4.4,
-      deliveryTime: 38
-    },
-    {
-      resName: "KFC",
-      cuisine: "Burger, Coca-Cola",
-      rating: 4.3,
-      deliveryTime: 30
-    },
-    {
-      resName: "Punjabi Tadka",
-      cuisine: "North Indian, Prathe, Lassi",
-      rating: 4.5,
-      deliveryTime: 35
-    },
-    {
-      resName: "Café Delight",
-      cuisine: "Italian, French",
-      rating: 4.7,
-      deliveryTime: 25
-    },
-    {
-      resName: "Sushi Haven",
-      cuisine: "Japanese, Sushi",
-      rating: 4.8,
-      deliveryTime: 40
-    },
-    {
-      resName: "Taco Fiesta",
-      cuisine: "Mexican, Tacos",
-      rating: 4.6,
-      deliveryTime: 30
-    },
-    {
-      resName: "Pizza Palace",
-      cuisine: "Italian, Pizza",
-      rating: 4.5,
-      deliveryTime: 35
-    },
-    {
-      resName: "Bollywood Bites",
-      cuisine: "Indian, Bollywood",
-      rating: 4.2,
-      deliveryTime: 40
-    },
-    {
-      resName: "Thai Terrace",
-      cuisine: "Thai, Curry",
-      rating: 4.6,
-      deliveryTime: 35
-    },
-    {
-      resName: "Greek Delights",
-      cuisine: "Greek, Gyros",
-      rating: 4.4,
-      deliveryTime: 30
-    },
-    {
-      resName: "Mamma Mia Pizzeria",
-      cuisine: "Italian, Pizza, Pasta",
-      rating: 4.9,
-      deliveryTime: 25
-    },
-    {
-      resName: "Burger Junction",
-      cuisine: "Burgers, Fries",
-      rating: 4.3,
-      deliveryTime: 30
-    },
-    {
-      resName: "Cantonese Corner",
-      cuisine: "Chinese, Dim Sum",
-      rating: 4.7,
-      deliveryTime: 40
-    },
-    {
-      resName: "Mediterranean Delights",
-      cuisine: "Mediterranean, Falafel",
-      rating: 4.5,
-      deliveryTime: 35
-    },
-    {
-      resName: "Veggie Haven",
-      cuisine: "Vegetarian, Vegan",
-      rating: 4.8,
-      deliveryTime: 30
-    },
-    {
-      resName: "Steakhouse Supreme",
-      cuisine: "Steak, Grill",
-      rating: 4.6,
-      deliveryTime: 45
-    },
-    {
-      resName: "Seafood Shack",
-      cuisine: "Seafood, Lobster",
-      rating: 4.7,
-      deliveryTime: 40
-    },
-    {
-      resName: "Smoothie Paradise",
-      cuisine: "Smoothies, Juices",
-      rating: 4.9,
-      deliveryTime: 25
-    },
-    {
-      resName: "Diner Dazzle",
-      cuisine: "American, Diner",
-      rating: 4.4,
-      deliveryTime: 35
-    },
-    {
-      resName: "Fusion Fare",
-      cuisine: "Global Fusion",
-      rating: 4.6,
-      deliveryTime: 30
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const data = await fetch(
+        "https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.6126255&lng=77.04108959999999&page_type=DESKTOP_WEB_LISTING"
+      );
+      const json = await data.json();
+      const info =
+        json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
+      setRestaurantsData(info);
+      setFilterResData(info);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
-   ]
-const Body = ()=>{
-    return (
-       <div className='body'>
-         <div className='search'>search</div>
-         <div className='res-container'>
-           {resObj.map((el,index) => <RestaurentCard key = {index} resData = {el}/>)}
-         
-         </div>
-       </div>
-    );
-   }
+  };
 
-   export default Body;
+  const handleSearch = () => {
+    const searchResult = restaurantsData.filter((res) =>
+      res.info.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setFilterResData(searchResult);
+  };
+
+  const handleFilterTopRated = () => {
+    const filteredResObj = restaurantsData.filter(
+      (res) => res.info.avgRating >= 4
+    );
+    setFilterResData(filteredResObj);
+  };
+
+  return (
+    <>
+      {!onlineStatus && <h1>You Are Offline!!</h1>}
+      {restaurantsData.length === 0 ? (
+        <Shimmer />
+      ) : (
+        <div className="body">
+          <div className="filter">
+            <div className="search flex items-center">
+              <input
+                className="search-box border rounded py-1 px-2 mr-2"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                placeholder="Search..."
+              />
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                onClick={handleSearch}
+              >
+                Search
+              </button>
+            </div>
+            <button
+              className="filter-btn bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handleFilterTopRated}
+            >
+              Top Rated Restaurants
+            </button>
+          </div>
+          <div className="res-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filterResData.map((el) => (
+              <Link to={"/restaurants/" + el.info.id} key={el.info.id}>
+                <RestaurantCard resData={el} />
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default Body;

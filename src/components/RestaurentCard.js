@@ -1,22 +1,25 @@
 import React from "react";
-const styleCard = {
-    backgroundColor:"#f0f0f0"
-   }
 
-   const RestaurentCard = (props)=>{
-    console.log(props);
-    const {resName,cuisine,rating,diliveryTime} = props.resData;
-    return(
-       <div className='res-card' style={styleCard}>
+const RestaurantCard = (props) => {
+  return (
+    <div className="res-card rounded-lg shadow-md p-4 bg-gray-100">
+      <div className="relative w-full h-[250px] rounded-lg mb-4">
         <img
-        className='res-logo'
-        alt="food-image"
-        src='https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/2ece2c5f21d615e1bb12163a495bbcbc'/>
-        <h3>{resName}</h3>
-        <h4>{cuisine}</h4>
-        <h4>{rating} star</h4>
-        <h4>{diliveryTime}</h4>
-       </div>
-    );
-   }
-   export default RestaurentCard;
+          className="absolute inset-0 w-full h-full  rounded-lg"
+          alt="food"
+          src={"https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/"+props.resData.info.cloudinaryImageId}
+        />
+      </div>
+      <h3 className="text-xl font-semibold mb-2">{props.resData.info.name}</h3>
+      <h4 className="text-sm mb-1">Cuisine: {props.resData.info.cuisines.join(", ")}</h4>
+      <div className="flex items-center mb-1">
+        <span className="text-sm mr-1 dark">Rating:</span>
+        <span className="text-sm font-semibold">{props.resData.info.avgRating}</span>
+        <span className="text-sm ml-1">★</span>
+      </div>
+      <h4 className="text-sm">Location: {props.resData.info.areaName}</h4>
+    </div>
+  );
+}
+
+export default RestaurantCard;
