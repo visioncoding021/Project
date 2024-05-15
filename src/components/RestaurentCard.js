@@ -22,4 +22,20 @@ const RestaurantCard = (props) => {
   );
 }
 
+// higher order component : 
+
+// input Restaurantcard = >> ReztaurantCardOpenClose;
+
+export const WithOpenLable = (RestaurantCard) =>{
+  return(props)=>{
+    return(
+      <div>
+        <span className="absolute bg-black m-2 p-2 rounded-sm block text-white z-10">promoted</span>
+        <RestaurantCard {...props}/>
+      </div>
+    )
+              
+  }
+}
+
 export default RestaurantCard;

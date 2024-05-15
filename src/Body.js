@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
-import RestaurantCard from "./components/RestaurentCard.js";
+import RestaurantCard ,{WithOpenLable}from "./components/RestaurentCard.js";
 import { Link } from "react-router-dom";
 import Shimmer from "./components/Shimmer.js";
 import useOnlineStatus from "./utils/useOnlineStatus.js";
-import useResData from "./utils/useResData.js";
+// import useResData from "./utils/useResData.js";
+
 
 const Body = () => {
   const [restaurantsData, setRestaurantsData] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [filterResData, setFilterResData] = useState([]);
   const onlineStatus = useOnlineStatus();
-  
+  const RestaurantCardWithLable = WithOpenLable(RestaurantCard);
 
   useEffect(() => {
     fetchData();
@@ -26,6 +27,7 @@ const Body = () => {
         json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
       setRestaurantsData(info);
       setFilterResData(info);
+      console.log(info);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -77,7 +79,9 @@ const Body = () => {
           <div className="res-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filterResData.map((el) => (
               <Link to={"/restaurants/" + el.info.id} key={el.info.id}>
-                <RestaurantCard resData={el} />
+              {console.log("el",el.info.isOpen)}
+               {Boolean(el.info.isOpen) ? <RestaurantCardWithLable resData = {el}/> : 
+                <RestaurantCard resData={el} />}
               </Link>
             ))}
           </div>
